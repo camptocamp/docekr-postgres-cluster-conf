@@ -21,17 +21,13 @@ done
 gosu postgres pg_ctl -D "$PGDATA" -m fast -w stop
 rm -rf $PGDATA/*
 
-pg_basebackup -h proxy -R -D $PGDATA -U postgres -v -P --xlog-method=stream -w
+pg_basebackup -h lb -R -D $PGDATA -U postgres -v -P --xlog-method=stream -w
 psql -h lb -c "SELECT * FROM pg_create_physical_replication_slot('${HOSTNAME}');" -U postgres -d postgres
 
 #cat >> ${PGDATA}/recovery.conf <<-EOF
-#standby_mode = 'on'
-#primary_conninfo = 'host=lb port=5432 user=postgres sslmode=disable'
 #primary_slot_name = '${HOSTNAME}'
 #recovery_target_timeline = 'latest'
 #EOF
-
-#chown postgres: ${PGDATA}/recovery.conf
 
 #gosu postgres cat >> ${PGDATA}/postgresql.conf <<-EOF
 #wal_level = hot_standby
