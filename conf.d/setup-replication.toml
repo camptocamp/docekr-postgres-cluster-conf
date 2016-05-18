@@ -2,6 +2,7 @@
 src = "setup-replication.sh.tmpl"
 dest = "/docker-entrypoint-initdb.d/setup-replication.sh"
 keys = [
+  "/self/stack/services/proxy/containers/0/uuid",
   "/services",
   "/self",
   "/containers",
