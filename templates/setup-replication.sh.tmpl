@@ -9,6 +9,8 @@ EOF
 
 echo host replication all 0.0.0.0/0 trust >> /var/lib/postgresql/data/pg_hba.conf
 
-{{if exists "/self/stack/services/proxy/containers/0/uuid"}}
+{{if exists "/self/stack/service/containers/1/uuid"}}
 # replica
+{{else}}
+# master
 {{end}}
