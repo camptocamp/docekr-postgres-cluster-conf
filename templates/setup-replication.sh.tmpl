@@ -15,14 +15,20 @@ echo host replication all 0.0.0.0/0 trust >> /var/lib/postgresql/data/pg_hba.con
 
 until pg_isready -h lb
 do
-  echo "sleep 1s and try again ..."
+  echo "Sleep 1s and try again..."
   sleep 1
 done
 
+echo "Stopping PostgreSQL..."
 gosu postgres pg_ctl -D "$PGDATA" -m fast -w stop
+
+echo "Removing data dir..."
 rm -rf $PGDATA/*
 
+echo "Launching pg_basebackup..."
 pg_basebackup -h lb -R -D $PGDATA -U postgres -v -P --xlog-method=stream -w
+
+echo "Create physical_replication_slot on server..."
 psql -h lb -c "SELECT * FROM pg_create_physical_replication_slot('${HOSTNAME}');" -U postgres -d postgres
 
 cat >> ${PGDATA}/recovery.conf <<-EOF
@@ -30,6 +36,7 @@ primary_slot_name = '${HOSTNAME}'
 recovery_target_timeline = 'latest'
 EOF
 
+echo "Starting PostgreSQL..."
 gosu postgres pg_ctl -D "$PGDATA" -w start
 
 {{else}}
