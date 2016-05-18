@@ -26,7 +26,7 @@ echo "Removing data dir..."
 rm -rf $PGDATA/*
 
 echo "Launching pg_basebackup..."
-pg_basebackup -h lb -R -D $PGDATA -U postgres -v -P --xlog-method=stream -w
+gosu postgres pg_basebackup -h lb -R -D $PGDATA -U postgres -v -P --xlog-method=stream -w
 
 echo "Create physical_replication_slot on server..."
 psql -h lb -c "SELECT * FROM pg_create_physical_replication_slot('${HOSTNAME}');" -U postgres -d postgres
