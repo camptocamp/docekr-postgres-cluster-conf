@@ -5,8 +5,6 @@ ENV MASTER master
 COPY conf.d/setup-replication.toml /etc/confd/conf.d/
 COPY templates/setup-replication.sh.tmpl /etc/confd/templates
 
-RUN mkdir /docker-entrypoint-initdb.d
-
 VOLUME [ "/docker-entrypoint-initdb.d" ]
 
 ENTRYPOINT ["/confd"]
