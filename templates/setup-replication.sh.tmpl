@@ -7,7 +7,7 @@ ALTER SYSTEM SET max_replication_slots = 10;
 ALTER SYSTEM SET wal_keep_segments = 32;
 EOF
 
-echo host replication all 10.42.0.0/16 trust >> /var/lib/postgresql/data/pg_hba.conf
+echo host replication all 0.0.0.0/0 trust >> /var/lib/postgresql/data/pg_hba.conf
 
 {{if exists "/self/service/containers/1/uuid"}}
 # replica
