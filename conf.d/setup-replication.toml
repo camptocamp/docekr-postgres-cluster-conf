@@ -1,6 +1,6 @@
 [template]
 src = "setup-replication.sh.tmpl"
-dest = "/setup-replication.sh"
+dest = "/docker-entrypoint-initdb.d/setup-replication.sh"
 keys = [
-  "/self/service/containers"
+  "/self",
 ]
