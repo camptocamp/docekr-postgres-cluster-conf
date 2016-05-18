@@ -1,6 +1,7 @@
 #!/bin/sh
 
 psql -U postgres -v ON_ERROR_STOP=1 <<-EOF
+CREATE USER replicator REPLICATION SUPERUSER LOGIN PASSWORD 'replicator';
 ALTER SYSTEM SET wal_level = hot_standby;
 ALTER SYSTEM SET max_wal_senders = 16;
 ALTER SYSTEM SET max_replication_slots = 10;
@@ -8,7 +9,7 @@ ALTER SYSTEM SET wal_keep_segments = 32;
 ALTER SYSTEM SET hot_standby = on;
 EOF
 
-echo host replication all 0.0.0.0/0 trust >> /var/lib/postgresql/data/pg_hba.conf
+echo host replication replicator 0.0.0.0/0 md5 >> ${PGDATA}/pg_hba.conf
 
 {{if exists "/self/service/containers/1/uuid"}}
 # replica
@@ -26,10 +27,11 @@ echo "Removing data dir..."
 rm -rf $PGDATA/*
 
 echo "Launching pg_basebackup..."
-gosu postgres pg_basebackup -h lb -R -D $PGDATA -U postgres -v -P --xlog-method=stream -w
+export PGPASSWORD=replicator
+gosu postgres pg_basebackup -R -h lb -D $PGDATA -U replicator -v -P --xlog-method=stream -w
 
 echo "Create physical_replication_slot on server..."
-psql -h lb -c "SELECT * FROM pg_create_physical_replication_slot('${HOSTNAME}');" -U postgres -d postgres
+psql -h lb -c "SELECT * FROM pg_create_physical_replication_slot('${HOSTNAME}');" -U replicator -d postgres
 
 cat >> ${PGDATA}/recovery.conf <<-EOF
 primary_slot_name = '${HOSTNAME}'
