@@ -9,7 +9,7 @@ EOF
 
 echo host replication all 0.0.0.0/0 trust >> /var/lib/postgresql/data/pg_hba.conf
 
-{{ if exists "/self/stack/services/postgres/uuid" }}
+{{ if exists "/self/stack/services/postgres/containers/0/uuid" }}
 # replica
 {{ else }}
 # master
