@@ -1,4 +1,4 @@
-FROM rancher/confd-base:0.11.0-dev-rancher
+FROM camptocamp/confd:v0.12.0-alpha3
 
 ENV MASTER master
 
