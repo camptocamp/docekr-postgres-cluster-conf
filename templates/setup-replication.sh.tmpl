@@ -1,6 +1,6 @@
 #!/bin/sh
 
-psql -v ON_ERROR_STOP=1 <<-EOF
+psql -U postgres -v ON_ERROR_STOP=1 <<-EOF
 ALTER SYSTEM SET wal_level = hot_standby;
 ALTER SYSTEM SET max_wal_senders = 16;
 ALTER SYSTEM SET max_replication_slots = 10;
