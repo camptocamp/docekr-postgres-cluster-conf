@@ -8,4 +8,4 @@ COPY templates/setup-replication.sh.tmpl /etc/confd/templates/
 VOLUME [ "/docker-entrypoint-initdb.d" ]
 
 ENTRYPOINT ["/confd"]
-CMD ["--backend", "rancher", "--prefix", "/2015-12-19", "-log-level", "debug"]
+CMD ["-onetime", "-backend", "rancher", "-prefix", "/2015-12-19"]
