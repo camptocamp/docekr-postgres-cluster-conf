@@ -1,11 +1,19 @@
-FROM camptocamp/confd:v0.12.0-alpha3
+FROM debian:jessie
 
-ENV MASTER master
+ENV CONFD_VERSION=0.12.0-alpha3 \
+  MASTER=master
 
-COPY conf.d/setup-replication.toml /etc/confd/conf.d/
-COPY templates/setup-replication.sh.tmpl /etc/confd/templates/
+RUN apt-get update \
+  && apt-get install -y curl \
+  && rm -rf /var/apt/lists/*
+
+RUN curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 \
+  && chmod +x /usr/local/bin/confd
+
+COPY ./conf.d/ /etc/confd/conf.d/
+COPY ./templates/ /etc/confd/templates/
 
 VOLUME [ "/docker-entrypoint-initdb.d" ]
 
-ENTRYPOINT ["/confd"]
-CMD ["--backend", "rancher", "--prefix", "/2015-12-19", "-log-level", "debug"]
+ENTRYPOINT ["confd"]
+CMD ["-onetime", "-backend", "rancher", "-prefix", "/2015-12-19"]
