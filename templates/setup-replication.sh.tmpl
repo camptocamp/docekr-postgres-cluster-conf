@@ -1,7 +1,7 @@
 #!/bin/sh
 
 psql -U postgres -v ON_ERROR_STOP=1 <<-EOF
-CREATE USER replicator REPLICATION SUPERUSER LOGIN PASSWORD 'replicator';
+CREATE USER replicator REPLICATION SUPERUSER LOGIN PASSWORD '$REPLICATOR_PASSWORD';
 ALTER SYSTEM SET wal_level = hot_standby;
 ALTER SYSTEM SET max_wal_senders = 16;
 ALTER SYSTEM SET max_replication_slots = 10;
@@ -27,7 +27,7 @@ echo "Removing data dir..."
 rm -rf $PGDATA/*
 
 echo "Launching pg_basebackup..."
-export PGPASSWORD=replicator
+export PGPASSWORD=$REPLICATOR_PASSWORD
 gosu postgres pg_basebackup -R -h lb -D $PGDATA -U replicator -v -P --xlog-method=stream -w
 
 echo "Create physical_replication_slot on server..."
