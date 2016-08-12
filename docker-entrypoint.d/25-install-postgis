@@ -1,15 +1,17 @@
 #!/bin/sh
 
-# Install postgis and pgrouting
-if ! dpkg -l postgresql-${PG_MAJOR}-postgis-2.2 \
-             postgresql-${PG_MAJOR}-pgrouting > /dev/null 2>&1
+if test $INSTALL_POSTGIS = "true"
 then
-  echo "Installing postgis and pgrouting"
-  apt-get update &&
-  apt-get install --no-install-recommends --no-install-suggests \
-    -y -t jessie-pgdg \
-      postgresql-${PG_MAJOR}-postgis-2.2 \
-      postgresql-${PG_MAJOR}-pgrouting
-  rm -rf /var/lib/apt/lists/*
+  # Install postgis and pgrouting
+  if ! dpkg -l postgresql-${PG_MAJOR}-postgis-2.2 \
+    postgresql-${PG_MAJOR}-pgrouting > /dev/null 2>&1
+  then
+    echo "Installing postgis and pgrouting"
+    apt-get update &&
+    apt-get install --no-install-recommends --no-install-suggests \
+      -y -t jessie-pgdg \
+        postgresql-${PG_MAJOR}-postgis-2.2 \
+        postgresql-${PG_MAJOR}-pgrouting
+    rm -rf /var/lib/apt/lists/*
+  fi
 fi
-
