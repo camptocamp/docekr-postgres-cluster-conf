@@ -1,7 +1,6 @@
 FROM alpine
 
-ENV CONFD_VERSION=0.12.0-alpha3 \
-  MASTER=master
+ENV CONFD_VERSION=0.12.0-alpha3
 
 RUN apk add --no-cache curl \
   && curl -L -o /usr/local/bin/confd https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 \
