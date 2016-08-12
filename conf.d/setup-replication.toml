@@ -2,5 +2,6 @@
 src = "setup-replication.sh.tmpl"
 dest = "/docker-entrypoint-initdb.d/setup-replication.sh"
 keys = [
+  "/self/host/hostname",
   "/self/service/containers/1/uuid",
 ]

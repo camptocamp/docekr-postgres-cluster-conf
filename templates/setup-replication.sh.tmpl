@@ -31,18 +31,7 @@ export PGPASSWORD=$REPLICATOR_PASSWORD
 gosu postgres pg_basebackup -R -h lb -D $PGDATA -U replicator -v -P --xlog-method=stream -w
 
 echo "Create physical_replication_slot on server..."
-if getent hosts rancher-metadata
-then
-  if ! dpkg -l curl
-  then
-    apt-get update
-    apt-get install --no-install-recommends --no-install-suggests -y curl
-    rm -rf /var/lib/apt/lists/*
-  fi
-  slot_name=$(curl -s http://rancher-metadata/2015-12-19/self/host/hostname | tr '-' '_')
-else
-  slot_name=${HOSTNAME}
-fi
+slot_name=$(echo {{getv "/self/host/hostname"}} | tr '-' '_')
 psql -h lb -c "SELECT * FROM pg_create_physical_replication_slot('${slot_name}');" -U replicator -d postgres
 
 cat >> ${PGDATA}/recovery.conf <<-EOF
