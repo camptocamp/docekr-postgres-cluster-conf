@@ -11,7 +11,7 @@ EOF
 
 echo host replication replicator 0.0.0.0/0 md5 >> ${PGDATA}/pg_hba.conf
 
-{{if exists "/self/stack/services/postgres/containers/1/uuid"}}
+{{if exists "/self/service/containers/1/uuid"}}
 # replica
 
 until pg_isready -h lb
