@@ -1,0 +1,1 @@
+../docker-entrypoint-initdb.d/15-healthcheck-database.sql
