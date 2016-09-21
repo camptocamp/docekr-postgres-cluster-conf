@@ -9,6 +9,7 @@ RUN apk add --no-cache curl \
 
 COPY ./docker-entrypoint.sh /postgres-c2c-conf/docker-entrypoint.sh
 COPY ./docker-entrypoint.d/ /postgres-c2c-conf/docker-entrypoint.d/
+COPY ./docker-entrypoint-initdb.d/ /postgres-c2c-conf/docker-entrypoint-initdb.d/
 
 COPY ./conf.d/ /etc/confd/conf.d/
 COPY ./templates/ /etc/confd/templates/
