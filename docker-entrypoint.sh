@@ -11,8 +11,8 @@ if [ -s "$PGDATA/PG_VERSION" ]; then
   for f in /postgres-c2c-conf/docker-entrypoint.d/*; do
     case "$f" in
       *.sh)     echo "$0: running $f"; . "$f" ;;
-      *.sql)    echo "$0: running $f"; "${psql[@]}" < "$f"; echo ;;
-      *.sql.gz) echo "$0: running $f"; gunzip -c "$f" | "${psql[@]}"; echo ;;
+      *.sql)    echo "$0: running $f"; psql < "$f"; echo ;;
+      *.sql.gz) echo "$0: running $f"; gunzip -c "$f" | psql; echo ;;
       *)        echo "$0: ignoring $f" ;;
     esac
     echo
