@@ -31,7 +31,7 @@ export PGPASSWORD=$REPLICATOR_PASSWORD
 gosu postgres pg_basebackup -R -h lb -D $PGDATA -U replicator -v -P --xlog-method=stream -w
 
 echo "Create physical_replication_slot on server..."
-slot_name=$(echo {{getv "/self/host/hostname"}} | tr '-' '_')
+slot_name=$(echo {{getv "/self/host/hostname"}} | cut -d. -f1 | tr '-' '_')
 psql -h lb -c "SELECT * FROM pg_create_physical_replication_slot('${slot_name}');" -U replicator -d postgres
 
 cat >> ${PGDATA}/recovery.conf <<-EOF
