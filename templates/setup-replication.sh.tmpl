@@ -21,14 +21,14 @@ do
 done
 
 echo "Stopping PostgreSQL..."
-gosu postgres pg_ctl -D "$PGDATA" -m fast -w stop
+pg_ctl -D "$PGDATA" -m fast -w stop
 
 echo "Removing data dir..."
 rm -rf $PGDATA/*
 
 echo "Launching pg_basebackup..."
 export PGPASSWORD=$REPLICATOR_PASSWORD
-gosu postgres pg_basebackup -R -h lb -D $PGDATA -U replicator -v -P --xlog-method=stream -w
+pg_basebackup -R -h lb -D $PGDATA -U replicator -v -P --xlog-method=stream -w
 
 echo "Create physical_replication_slot on server..."
 slot_name=$(echo {{getv "/self/host/hostname"}} | cut -d. -f1 | tr '-' '_')
@@ -40,7 +40,7 @@ recovery_target_timeline = 'latest'
 EOF
 
 echo "Starting PostgreSQL..."
-gosu postgres pg_ctl -D "$PGDATA" -w start
+pg_ctl -D "$PGDATA" -w start
 
 {{else}}
 # master
