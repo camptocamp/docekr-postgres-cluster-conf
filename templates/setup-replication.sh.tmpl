@@ -28,7 +28,7 @@ rm -rf $PGDATA/*
 
 echo "Launching pg_basebackup..."
 export PGPASSWORD=$REPLICATOR_PASSWORD
-pg_basebackup -R -h lb -D $PGDATA -U replicator -v -P --xlog-method=stream -w
+pg_basebackup -R -h lb -D $PGDATA -U replicator -v -P -X stream -w
 
 echo "Create physical_replication_slot on server..."
 slot_name=$(echo {{getv "/self/host/hostname"}} | cut -d. -f1 | tr '-' '_')
